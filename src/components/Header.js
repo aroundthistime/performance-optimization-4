@@ -4,65 +4,35 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCategory } from '../redux/category';
 
 function Header() {
-  const dispatch = useDispatch();
-  const category = useSelector(state => state.category.category);
+  const CATEGORIES = ['all', 'random', 'animals', 'food', 'fashion', 'travel']
 
   return (
     <HeaderWrap>
       <Nav>
         <NavList>
-          <NavItem
-            active={category === 'all'}
-            onClick={() => {
-              dispatch(setCategory('all'));
-            }}
-          >
-            <span>All</span>
-          </NavItem>
-          <NavItem
-            active={category === 'random'}
-            onClick={() => {
-              dispatch(setCategory('random'));
-            }}
-          >
-            <span>Random</span>
-          </NavItem>
-          <NavItem
-            active={category === 'animals'}
-            onClick={() => {
-              dispatch(setCategory('animals'));
-            }}
-          >
-            <span>Animals</span>
-          </NavItem>
-          <NavItem
-            active={category === 'food'}
-            onClick={() => {
-              dispatch(setCategory('food'));
-            }}
-          >
-            <span>Food</span>
-          </NavItem>
-          <NavItem
-            active={category === 'fashion'}
-            onClick={() => {
-              dispatch(setCategory('fashion'));
-            }}
-          >
-            <span>Fashion</span>
-          </NavItem>
-          <NavItem
-            active={category === 'travel'}
-            onClick={() => {
-              dispatch(setCategory('travel'));
-            }}
-          >
-            <span>Travel</span>
-          </NavItem>
+          {CATEGORIES.map(category => (
+            <CategoryNav category={category} key={category}/>
+          ))}
         </NavList>
       </Nav>
     </HeaderWrap>
   );
+}
+
+const CategoryNav = ({category}) => {
+  const isSelected = useSelector(state => state.category.category === category);
+  const dispatch = useDispatch()
+
+  return (
+    <NavItem
+      active={isSelected}
+      onClick={() => {
+        dispatch(setCategory(category))
+      }}
+    >
+      <span>{category}</span>
+    </NavItem>
+  )
 }
 
 const HeaderWrap = styled.header`
@@ -85,6 +55,7 @@ const NavItem = styled.li`
     font-weight: 700;
     color: ${({ active }) => (active ? '#fff' : '#999')};
     cursor: pointer;
+    text-transform: capitalize;
   }
 
   span:hover {
@@ -92,4 +63,4 @@ const NavItem = styled.li`
   }
 `;
 
-export default Header;
+export default React.memo(Header);
